@@ -40,7 +40,9 @@ while not use_preset in ['y', 'n']:
 beeping: str = ''
 while not beeping in ['y','n']:
     beeping = input('beep at end of cycle?(y/n)')
+
 if beeping=='y':
+    # set up beeping
     from playsound import playsound
     beepsound='resources/beep-07a.wav'
 
@@ -48,6 +50,35 @@ if beeping=='y':
 popup: str = ''
 while not popup in ['y','n']:
     popup = input('show popup at end of cycle?(y/n)')
+if popup == 'y':
+    from platform import system
+    os_name=system()
+    if os_name == 'Linux':
+        from subprocess import Popen
+        def popup_func(prev_cycle: str, next_cycle: str): # type: ignore
+            Popen([
+                'notify-send',
+                '--app-name="Pomodoro"',
+                '--action="OKAY"',
+                '--wait',
+                '--urgency=critical',
+                'end of ' + prev_cycle + ', beginning of ' + next_cycle,
+
+            ])
+    if os_name=='Windows':
+        import ctypes
+        def popup_func(prev_cycle: str, next_cycle: str): # type: ignore
+            ctypes.windll.user32.MessageBoxW( # type: ignore
+                0, 
+                'end of cycle ' + prev_cycle + ', beginning of cycle ' + next_cycle,
+                "Pomodoro", 
+                0x00001000
+                )
+    if os_name=='Darwin':
+        def popup_func(*_):
+            print("sorry, popups are't supported on Mac yet. Bug me about this")
+
+    
 
 while True:
     for i in range(cycle_count): # type: ignore
@@ -57,13 +88,5 @@ while True:
         if beeping == 'y':
             playsound(beepsound, block=True) # type: ignore 
         if popup == 'y':
-            pass
-            # Popen([
-            #     'notify-send',
-            #     '--app-name="Pomodoro"',
-            #     '--action="OKAY"',
-            #     '--wait',
-            #     '--urgency=critical',
-            #     'end of cycle ' + cycles[i][0] + ', beginning of cycle ' + cycles[(i+1) % cycle_count][0],
-
-            # ])
+            popup_func(cycles[i][0], cycles[(i+1) % cycle_count][0]) # type: ignore
+            

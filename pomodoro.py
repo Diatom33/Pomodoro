@@ -12,8 +12,8 @@ def fix_json_tags(inputfile: dict[str, list[str | float]]):
 while not use_preset in ['y', 'n']: 
     use_preset = input('use preset?(y/n)')
     if use_preset=='y':
-        print('\n'.join(item[:-5] for item in os.listdir('presets')))
-        preset_name = input('choose a preset from the list') + '.json'
+        print('\n'+'\n'.join(item[:-5] for item in os.listdir('presets'))+'\n')
+        preset_name = input('choose a preset from the list:') + '.json'
         inputfile = json.load(open('presets/' + preset_name, 'r'))
         cycles = fix_json_tags(inputfile)
         cycle_count = len(cycles)
@@ -37,10 +37,15 @@ while not use_preset in ['y', 'n']:
                     dump_mode = 'x'
                 json.dump(cycles, open('presets/' + preset_name+ '.json', dump_mode))
 
-beeping = ''
+beeping: str = ''
 while not beeping in ['y','n']:
     beeping = input('beep at end of cycle?(y/n)')
-popup = ''
+if beeping=='y':
+    from playsound import playsound
+    beepsound='resources/beep-07a.wav'
+
+
+popup: str = ''
 while not popup in ['y','n']:
     popup = input('show popup at end of cycle?(y/n)')
 
@@ -50,8 +55,7 @@ while True:
         print('sleeping')
         sleep(60*cycles[i][1]) # type: ignore
         if beeping == 'y':
-            pass
-        print('popup')
+            playsound(beepsound, block=True) # type: ignore 
         if popup == 'y':
             pass
             # Popen([

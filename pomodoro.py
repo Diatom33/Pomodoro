@@ -20,7 +20,7 @@ use_preset = ''
 while not use_preset in ['y', 'n']: 
     use_preset = input('use preset?(y/n)')
 if use_preset=='y':
-    print('\n'+'\n'.join(item[:-5] for item in os.listdir('presets'))+'\n')
+    print('\n'+'\n - '.join(item[:-5] for item in os.listdir('presets'))+'\n')
     preset_name = input('choose a preset from the list:') + '.json'
     inputfile = json.load(open('presets/' + preset_name, 'r'))
     cycles = fix_json_tags(inputfile)

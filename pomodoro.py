@@ -1,6 +1,7 @@
 from time import sleep
 import os
 import json
+import sys
 
 use_preset = ''
 def fix_json_tags(inputfile: dict[str, list[str | float]]):
@@ -43,7 +44,9 @@ while not beeping in ['y','n']:
 
 if beeping=='y':
     # set up beeping
+    sys.stdout = open(os.devnull, 'w')
     from playsound import playsound
+    sys.stdout = sys.__stdout__
     beepsound='resources/beep-07a.wav'
 
 

@@ -1,42 +1,49 @@
 from time import sleep
 import os
 import json
-import sys
+# import sys
 
-use_preset = ''
+
+# the preset formatting is somewhat weird, 
+# will probably switch to pickles at some point
 def fix_json_tags(inputfile: dict[str, list[str | float]]):
+    """
+    fixes the fact that cycle indices are ints, but
+    in json they must be strings
+    """
     outputfile: dict[int, list[str | float]] = {}
     for k, v in inputfile.items():
         outputfile[int(k)] = v
     return outputfile
 
+use_preset = ''
 while not use_preset in ['y', 'n']: 
     use_preset = input('use preset?(y/n)')
-    if use_preset=='y':
-        print('\n'+'\n'.join(item[:-5] for item in os.listdir('presets'))+'\n')
-        preset_name = input('choose a preset from the list:') + '.json'
-        inputfile = json.load(open('presets/' + preset_name, 'r'))
-        cycles = fix_json_tags(inputfile)
-        cycle_count = len(cycles)
-    elif use_preset=='n':
-        cycle_count=''
-        while not isinstance(cycle_count, int):
-            cycle_count = int(input('cycle count:'))
-        cycles: dict[int,list[str | float]] = {}
-        for i in range(cycle_count):
-            cycles[i]=[]
-            cycles[i].append(input('cycle ' + str(i+1) + ' name:'))
-            cycles[i].append(float(input('cycle ' + str(i+1) + '  duration (minutes):')))
-        save_as_preset = ''
-        while not save_as_preset in ['y', 'n']:
-            save_as_preset = input('save as preset?(y/n)')
-            if save_as_preset == 'y':
-                preset_name = input('preset name?(without extension)')
-                if os.path.exists('presets/' + preset_name+ '.json'):
-                    dump_mode = 'w'
-                else:
-                    dump_mode = 'x'
-                json.dump(cycles, open('presets/' + preset_name+ '.json', dump_mode))
+if use_preset=='y':
+    print('\n'+'\n'.join(item[:-5] for item in os.listdir('presets'))+'\n')
+    preset_name = input('choose a preset from the list:') + '.json'
+    inputfile = json.load(open('presets/' + preset_name, 'r'))
+    cycles = fix_json_tags(inputfile)
+    cycle_count = len(cycles)
+elif use_preset=='n':
+    cycle_count=''
+    while not isinstance(cycle_count, int):
+        cycle_count = int(input('cycle count:'))
+    cycles: dict[int,list[str | float]] = {}
+    for i in range(cycle_count):
+        cycles[i]=[]
+        cycles[i].append(input('cycle ' + str(i+1) + ' name:'))
+        cycles[i].append(float(input('cycle ' + str(i+1) + '  duration (minutes):')))
+    save_as_preset = ''
+    while not save_as_preset in ['y', 'n']:
+        save_as_preset = input('save as preset?(y/n)')
+        if save_as_preset == 'y':
+            preset_name = input('preset name?(without extension)')
+            if os.path.exists('presets/' + preset_name+ '.json'):
+                dump_mode = 'w'
+            else:
+                dump_mode = 'x'
+            json.dump(cycles, open('presets/' + preset_name+ '.json', dump_mode))
 
 beeping: str = ''
 while not beeping in ['y','n']:
@@ -44,9 +51,7 @@ while not beeping in ['y','n']:
 
 if beeping=='y':
     # set up beeping
-    sys.stdout = open(os.devnull, 'w')
     from playsound import playsound
-    sys.stdout = sys.__stdout__
     beepsound='resources/beep-07a.wav'
 
 

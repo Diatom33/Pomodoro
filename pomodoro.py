@@ -59,10 +59,10 @@ if popup == 'y':
             Popen([
                 'notify-send',
                 '--app-name="Pomodoro"',
-                '--action="OKAY"',
+                '--action=okay',
                 '--wait',
                 '--urgency=critical',
-                'end of ' + prev_cycle + ', beginning of ' + next_cycle,
+                'End of ' + prev_cycle + ', beginning of ' + next_cycle + '.',
 
             ])
     if os_name=='Windows':
@@ -70,8 +70,8 @@ if popup == 'y':
         def popup_func(prev_cycle: str, next_cycle: str): # type: ignore
             ctypes.windll.user32.MessageBoxW( # type: ignore
                 0, 
-                'end of cycle ' + prev_cycle + ', beginning of cycle ' + next_cycle,
-                "Pomodoro", 
+                'End of ' + prev_cycle + ', beginning of ' + next_cycle + '.',
+                'Pomodoro', 
                 0x00001000
                 )
     if os_name=='Darwin':

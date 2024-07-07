@@ -5,3 +5,8 @@ This is a hacky little command line [Pomodoro](https://en.wikipedia.org/wiki/Pom
 - custom number of time periods in a cycle
 - system notifications and beeping, both optional, when each time period ends
 - ability to save and load multiple presets
+
+## Future features I might add:
+- support for popups on Mac (conditional on any Mac users actually wanting to use this)
+- delaying start of next time period until after the popup has been dismissed (already implemented on Windows)
+- web UI

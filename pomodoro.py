@@ -95,6 +95,7 @@ while True:
         sleep(60*cycles[i][1]) # type: ignore
         if beeping == 'y':
             playsound(beepsound, block=True) # type: ignore 
+            playsound(beepsound, block=True) # type: ignore  
         if popup == 'y':
             popup_func(cycles[i][0], cycles[(i+1) % cycle_count][0]) # type: ignore
             
